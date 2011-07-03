@@ -1,0 +1,2 @@
+likes(cecilia, motorcycle).
+%

@@ -1,0 +1,104 @@
+Description and an example of the Prolog evaluation algorithm
+-------------------------------------------------------------
+
+Input:	Prolog program $P and a goal (query) $G
+Output: Failure or an instance of $G that logically follows from $P
+
+Algorithm
+---------
+
+Initialise unification status to unknown
+Initialise an empty $Stack
+Push a frame to the $Stack with:
+   database position == beginning of the database $P
+   resolvent == $G (the query)
+   goal == $G (the query)
+While the $Stack is not empty
+   Pop a $Frame from the $Stack
+   While the resolvent of the $Frame is not empty
+      Set $Goal to equal the first term of the frame resolvent.
+      Remove the $Goal from the $Frame resolvent.
+      While the $Frame database position is not the end of the database
+         Copy the database term at the position to $Compare
+         Rename the variables in $Compare
+         Advance the $Frame database position
+         Set unification status to unknown
+         If $Goal and $Compare unify with the MGU $U
+            If $Frame database position is not the end of the database
+               Push a new frame to the $Stack with:
+                  goal == goal of the $Frame
+                  resolvent == $Goal and $Frame resolvent *
+                  database position == database position of the $Frame
+            Apply $U to $Frame resolvent
+            Apply $U to $Frame goal
+            Apply $U to the body of $Compare
+            For each $Term in the body of $Compare
+               Add $Term to the end of $Frame resolvent
+            Set $Frame position to the beginning of database $P
+            Set unification status to success
+            Break the innermost while loop
+      If $Frame position is the end of the database $P AND the unification status is not success
+         Break the innermost while loop
+   If $Frame resolvent is empty and the unification status is success
+      Return $Frame goal
+Fail
+
+
+* Since $Goal is actually a list that contains also the resolvent of the list
+  it is enough to just copy the $Goal here.
+
+
+Adapted from the book "The Art of Prolog"
+
+Notes
+-----
+
+Most of the assignments are actually PLTermCopy calls so be sure to free
+the memory allocated by the copy operation.
+
+Example
+-------
+
+This program performs integer addition. Numbers are presented with a
+follower function s(N). Thus, 0 is 0, s(0) is 1, s(s(0)) is 2 et cetera.
+
+Program:
+	add(0, N, N).
+        add(s(V), N, A) :-
+        	add(V, s(N), A).
+
+Goal:	add(s(0), s(0), Sum).
+
+Evaluation:
+	add(s(0), s(0), Sum).
+        	Does not unify with add(0, N, N).
+                Unifies with add(s(V), N, A). {V = 0, N = s(0), Sum = A}
+        add(0, s(s(0)), A).
+        	Unifies with with add(0, N, N). {N = s(s(0)), A = s(s(0))}
+        Solution found. Reply with add(s(0), s(0), s(s(0))).
+
+Example
+-------
+
+Program:
+	pet(cat).
+	person(john).
+        owns(john, cat).
+
+        owner(A, B) :-
+        	person(A),
+                pet(B),
+                owns(A, B).
+
+Goal:	owner(Human, Animal).
+
+Evaluation:
+	Resolvent: owner(Human, Animal).
+        Unification: owner(Human = A, Animal = B).
+        Resolvent: person(Human). pet(Animal). owns(Human, Animal).
+        Unification: person(Human = john).
+        Resolvent: pet(Animal). owns(john, Animal).
+        Unification: pet(Animal = cat).
+        Resolvent: owns(john, cat).
+        Unification: owns(john, cat).
+        Solution found. Reply with owner(john, cat).

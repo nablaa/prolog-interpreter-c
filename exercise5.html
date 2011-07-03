@@ -1,0 +1,121 @@
+<html><head></head><body><p>In this exercise you will implement a working interpreter for a non-trivial subset of the logic programming language
+Prolog. Knowledge of Prolog or predicate logic is not required, although knowing both or either makes it easier
+to understand how the interpreter works. The general program structure is provided in the form of header files.
+Relatively detailed descriptions of the key algorithms (unification and the evaluation) and some sample Prolog
+programs are also included.
+</p>
+
+<h2>A very short introduction to Prolog</h2>
+<p>
+Prolog is a logic programming language which is based on first-order predicate logic. Predicate logic is Turing-complete
+and Prolog restricts it's operations to Horn clauses which form a Turing-complete subset of predicate logic. For this
+exercise understanding predicate logic or Horn clauses is not necessary. It is sufficient to know that they are logical
+clauses of form name(arguments) :- body. and that the clause is true if all clauses in it's body are true. 
+</p>
+<p>
+Given a program (a database) and a query (goal), the prolog interpreter must answer the question "Does the goal logically
+follow from the program?". Valid answers are either yes or no, in the case of the affirmative, the solution
+must also be presented (free variables within the solution unified to their proper values). In the most simple case
+the program can consist of a single atom like "happy.", given the query "happy." the interpreter simply replies 'yes'
+because the query does logically follow from the database, however, given the query "unhappy." the interpreter would
+reply 'no'. In the most complicated case an exhaustive search has to be performed to determine if the query can be
+deduced from the logical rules of the program. Some queries can have more than one correct reply, some even have an
+infinite amount of correct replies.
+</p>
+
+<h2>Data structures within the interpreter</h2>
+
+<p>Variables. A variable is a sequence of alpha-numeric characters that begins with a capital letter (A..Z).</p>
+
+<p>Compound terms. A compound term is of form name(arguments) :- body. Where the name is an alpha-numeric string
+that does not beging with a capital letter (A..Z). A term need not have a body or even arguments. In a case when the
+term has no arguments it's called an atom, for example in the term age(joe, 20)., terms "joe" and "20" are atoms.</p>
+
+<h2>How to implement the interpreter</h2>
+<p>Following is the recommended order in which the interpreter should be implemented. The functions declared in the
+header file plterm.h can be implemented gradually over the exercise, when their functionality becomes necessary.
+Test your implementation with the three given Prolog programs, the programs in order of increasing complexity are:
+facts.pl, sum.pl and ackermann.pl. See the comments in the programs for sample input/output.
+</p>
+
+<ul>
+<li>Tokeniser. Since the tokeniser does not depend on any other part of the interpreter it can be implemented and tested
+without any other part of the interpreter ready and should therefore be the first part of the interpreter you implement.</li>
+<li>Parser. Requires the tokeniser but no other parts of the interpreter, the function PLTermPrint() is useful for debugging
+the parser.</li>
+<li>Unification. See the unification.txt file for a description of the unification algorithm and some examples of unifying
+and non-unifying terms. You should be absolutely certain that your implementation of the unification algorithm is flawless
+before you start implementing the evaluator.</li>
+<li>Evaluator. The evaluator is, with the unification algorithm, the core of the interpreter. Use the sample prolog programs
+to test and debug your evaluator.</li>
+</ul>
+
+<p>
+This implementation of the interpreter is minimal but can easily be extended to provide most of the features available
+in actual Prolog interpreters. Several of Prolog's features would be easily implemented, such as cut, integer arithmetics
+or built in predicates for list handling and meta logical operations.
+</p>
+
+<h2>User interface</h2>
+<p>The interpreter uses a minimal user interface that allows interaction with the interpreter. The interface is
+simple to implement as all input is assumed valid (unrealistic with a human user). The only special input is
+the fact quit. which causes the interpreter to terminate and free all memory allocated dynamically.</p>
+
+<p>Here are the user interface messages apart from PLTermPrint()
+</p><pre>printf("Query:\n");
+printf("No.\n");
+printf("Solution: ");
+printf("More solutions (y/n) ?\n");
+</pre><p></p>
+
+<h2>Notes:</h2>
+
+<ul>
+<li>You can assume that all input is syntactically valid.</li>
+<li>Your implementation need not handle stack overflow, the interpreter will only be tested with programs
+for which there is a solution in finite time and space or no solution at all.</li>
+<li>You should test each part of the interpreter with valgrind.</li>
+<li>You are allowed to have one global variable for the purpose of renaming variables in terms.</li>
+<li>Read the database to the same order as it is in the file. That is, with database number(1). number(2). The first reply of
+the query number(N). Must be number(1).</li>
+<li>This exercise is not impossible but does require a strong knowledge of C.</li>
+<li>The model solution is roughly 750 lines in total, including the main() function.</li>
+<li>You can assume that the name of a term or a variable does not exceed 128 characters in length</li> 
+<li>Memory leaks of any kind are not appreciated.</li>
+</ul>
+
+<h2>Desired output:</h2>
+<pre><span style="color: red;">Database: sum(0, N, N).</span>
+<span style="color: red;">Database: sum(s(V), N, M) :-</span>
+<span style="color: red;">Database:    sum(V, s(N), M).</span>
+<span style="color: red;">[program execution starts]</span>
+<span style="color: green;">Query: </span>
+<span style="color: blue;">sum(s(s(0)), s(0), Result).</span>
+<span style="color: green;">Solution: sum(s(s(0)),s(0),s(s(s(0)))).</span>
+<span style="color: green;">More solutions (y/n) ?</span>
+<span style="color: blue;">n</span>
+<span style="color: green;">Query: </span>
+<span style="color: blue;">sum(Number, s(0), s(s(s(0)))).</span>
+<span style="color: green;">Solution: sum(s(s(0)),s(0),s(s(s(0)))).</span>
+<span style="color: green;">More solutions (y/n) ?</span>
+<span style="color: blue;">n</span>
+<span style="color: green;">Query: </span>
+<span style="color: blue;">sum(First, Second, s(0)).</span>
+<span style="color: green;">Solution: sum(0,s(0),s(0)).</span>
+<span style="color: green;">More solutions (y/n) ?</span>
+<span style="color: blue;">y</span>
+<span style="color: green;">Solution: sum(s(0),0,s(0)).</span>
+<span style="color: green;">More solutions (y/n) ?</span>
+<span style="color: blue;">n</span>
+<span style="color: green;">Query: </span>
+<span style="color: blue;">quit.</span>
+<span style="color: red;">[program execution ends]</span>
+</pre>
+
+<pre><strong>Color codes:</strong>
+<span style="color: green;">Green:</span> Program output
+<span style="color: blue;">Blue:</span> User input
+<span style="color: red;">Red:</span> Special remarks
+</pre>
+
+</body></html>

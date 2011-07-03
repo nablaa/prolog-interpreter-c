@@ -1,0 +1,60 @@
+Description and examples of the unification algorithm
+-----------------------------------------------------
+
+Input: Two terms, T1 and T2 to be unified
+Output: Failure or the MGU (Most General Unifier) of terms T1 and T2
+
+Algorithm
+---------
+
+Initialise the MGU to an empty unifier
+Push T1 = T2 to the stack
+While the stack is not empty
+	Pop X = Y from the stack
+	case: X is a variable AND X does not occur in Y
+        	Create unifier U such that X = Y
+                Apply U to MGU
+                Add U to MGU
+                Apply U to stack
+        case: Y is a variable AND Y does not occur in X
+        	Create unifier U such that Y = X
+                Apply U to MGU
+                Add U to MGU
+                Apply U to stack
+        case: X and Y are identical constants or variables
+        	do nothing
+        case: X is of form p(a0,..,an) and Y is of form p(b0,..,bn)
+		For m = 0 to n
+                	push am = bm to the stack
+        default case:
+        	Failure
+Return the MGU
+
+Adapted from the book "The Art of Prolog"
+
+Examples
+--------
+
+T1:	number(1).
+T2:	number(1).
+Unifies with an empty MGU.
+
+T1:	number(1).
+T2:	number(Number).
+Unifies with MGU {Number = 1}.
+
+T1:	list(a, list(b, list(c, last))).
+T2:	list(a, List).
+Unifies with MGU {List = list(b, list(c, last))}
+
+T1:	list(list(a, X), Y).
+T2:	list(A, list(b, C)).
+Unifies with MGU {A = list(a, X), Y = list(b, C)}
+
+T1:	list(a, list(b, last)).
+T2:	animal(cat).
+Does not unify because the terms have a different name.
+
+T1:	list(a, list(C)).
+T2:	list(C).
+Does not unify because of the occurrence of variable C.
