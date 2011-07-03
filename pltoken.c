@@ -82,9 +82,9 @@ void PLTokensFree(PLToken *token)
 	free(token);
 	while (t) {
 		token = t;
+		t = t->next;
 		free(token->value);
 		free(token);
-		t = t->next;
 	}
 }
 
