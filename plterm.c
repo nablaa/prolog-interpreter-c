@@ -179,22 +179,32 @@ void PLTermPrint(const PLTerm *t, FILE *file)
 		return;
 	}
 
-	if (PLTermIsCompound(t)) {
-		fprintf(file, "%s", t->datum.compoundTerm.name);
-		if (!PLTermIsConstant(t)) {
-			fprintf(file, "(");
-			PLTermPrint(t->datum.compoundTerm.arguments, file);
-			fprintf(file, ")");
-			if (t->datum.compoundTerm.body) {
-				fprintf(file, ":-");
-				PLTermPrint(t->datum.compoundTerm.body, file);
-			}
-		}
-	} else {
+	if (PLTermIsVariable(t)) {
 		fprintf(file, "%s", t->datum.variable);
-		if (t->next) {
+		return;
+	}
+
+	fprintf(file, "%s", t->datum.compoundTerm.name);
+	if (PLTermArity(t) > 0) {
+		fprintf(file, "(");
+		PLTermPrint(t->datum.compoundTerm.arguments, file);
+		PLTerm *p = t->datum.compoundTerm.arguments->next;
+		while (p) {
 			fprintf(file, ",");
-			PLTermPrint(t->next, file);
+			PLTermPrint(p, file);
+			p = p->next;
+		}
+		fprintf(file, ")");
+	}
+
+	if (t->datum.compoundTerm.body) {
+		fprintf(file, ":-");
+		PLTermPrint(t->datum.compoundTerm.body, file);
+		PLTerm *p = t->datum.compoundTerm.body->next;
+		while (p) {
+			fprintf(file, ",");
+			PLTermPrint(p, file);
+			p = p->next;
 		}
 	}
 }
