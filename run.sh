@@ -1,5 +1,6 @@
 #!/bin/bash
 
+valgrind="none"
 if [ $# -gt 0 ]; then
 	valgrind=$1
 fi
