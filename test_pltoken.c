@@ -51,6 +51,7 @@ void print_tokens(PLToken *t)
 
 void test_pltoken()
 {
+	WITH_COLOR(GREEN, printf("test_pltoken()\n"));
 	test("sum.pl", 0);
 	test("ackermann.pl", 1);
 	test("facts.pl", 0);
