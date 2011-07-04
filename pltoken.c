@@ -19,6 +19,10 @@ PLToken *PLTokenise(FILE *file, int stopToFirstPeriod)
 			ch = fgetc(file);
 		}
 
+		if (ch == EOF) {
+			break;
+		}
+
 		if (ch == '(') {
 			t = PLTokenCreate(PLTokenParenthesisOpen, NULL);
 		} else if (ch == ')') {
