@@ -68,6 +68,22 @@ int PLTermEqual(const PLTerm *t1, const PLTerm *t2)
 	if (t1->type != t2->type) {
 		return 0;
 	}
+
+	if (PLTermIsVariable(t1)) {
+		return !strcmp(t1->datum.variable, t2->datum.variable);
+	}
+
+	if (PLTermIsConstant(t1)) {
+		if (!PLTermIsConstant(t2)) {
+			return 0;
+		}
+		return !strcmp(t1->datum.compoundTerm.name, t2->datum.compoundTerm.name);
+	}
+
+	if (strcmp(t1->datum.compoundTerm.name, t2->datum.compoundTerm.name)) {
+		return 0;
+	}
+
 	if (PLTermArity(t1) != PLTermArity(t2)) {
 		return 0;
 	}
