@@ -1,6 +1,6 @@
 #include "test_pltoken.h"
 
-void test(const char *filename, int stop)
+void test_token(const char *filename, int stop)
 {
 	WITH_COLOR(BLUE, printf("Testing tokens in file: %s\n", filename));
 
@@ -52,8 +52,8 @@ void print_tokens(PLToken *t)
 void test_pltoken()
 {
 	WITH_COLOR(GREEN, printf("test_pltoken()\n"));
-	test("sum.pl", 0);
-	test("ackermann.pl", 1);
-	test("facts.pl", 0);
+	test_token("sum.pl", 0);
+	test_token("ackermann.pl", 1);
+	test_token("facts.pl", 0);
 }
 

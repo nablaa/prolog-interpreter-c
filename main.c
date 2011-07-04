@@ -3,6 +3,7 @@
 #include "tests.h"
 #include "test_pltoken.h"
 #include "test_plterm.h"
+#include "test_plparse.h"
 
 int main()
 {
@@ -10,6 +11,7 @@ int main()
 
 	test_pltoken();
 	test_plterm();
+	test_plparse();
 
 	WITH_COLOR(GREEN, printf("Tests end\n"));
 	return EXIT_SUCCESS;
