@@ -11,6 +11,7 @@ void test_parse(const char *filename)
 	}
 
 	PLToken *token = PLTokenise(file, 0);
+	PLToken *remove = token;
 	const PLToken **t = &token;
 	PLTerm *term = PLParse(t);
 
@@ -18,7 +19,7 @@ void test_parse(const char *filename)
 	printf("\n");
 
 	PLTermFree(term);
-	PLTokensFree(token);
+	PLTokensFree(remove);
 	fclose(file);
 }
 
