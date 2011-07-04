@@ -173,7 +173,7 @@ PLTerm *PLTermsCopy(const PLTerm *t)
 	return first;
 }
 
-void PLTermPrint(const PLTerm *t, FILE *file)
+void PLTermPrint_(const PLTerm *t, FILE *file)
 {
 	if (!t) {
 		return;
@@ -187,11 +187,11 @@ void PLTermPrint(const PLTerm *t, FILE *file)
 	fprintf(file, "%s", t->datum.compoundTerm.name);
 	if (PLTermArity(t) > 0) {
 		fprintf(file, "(");
-		PLTermPrint(t->datum.compoundTerm.arguments, file);
+		PLTermPrint_(t->datum.compoundTerm.arguments, file);
 		PLTerm *p = t->datum.compoundTerm.arguments->next;
 		while (p) {
 			fprintf(file, ",");
-			PLTermPrint(p, file);
+			PLTermPrint_(p, file);
 			p = p->next;
 		}
 		fprintf(file, ")");
@@ -199,14 +199,21 @@ void PLTermPrint(const PLTerm *t, FILE *file)
 
 	if (t->datum.compoundTerm.body) {
 		fprintf(file, ":-");
-		PLTermPrint(t->datum.compoundTerm.body, file);
+		PLTermPrint_(t->datum.compoundTerm.body, file);
 		PLTerm *p = t->datum.compoundTerm.body->next;
 		while (p) {
 			fprintf(file, ",");
-			PLTermPrint(p, file);
+			PLTermPrint_(p, file);
 			p = p->next;
 		}
 	}
+
+}
+
+void PLTermPrint(const PLTerm *t, FILE *file)
+{
+	PLTermPrint_(t, file);
+	fprintf(file, ".\n");
 }
 
 void PLTermFree(PLTerm *t)
