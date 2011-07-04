@@ -55,5 +55,6 @@ void test_pltoken()
 	test_token("sum.pl", 0);
 	test_token("ackermann.pl", 1);
 	test_token("facts.pl", 0);
+	test_token("parse_test.pl", 0);
 }
 

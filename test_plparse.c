@@ -27,6 +27,7 @@ void test_plparse()
 {
 	WITH_COLOR(GREEN, printf("test_plparse()\n"));
 	test_parse("sum.pl");
+	test_parse("parse_test.pl");
 }
 
 
