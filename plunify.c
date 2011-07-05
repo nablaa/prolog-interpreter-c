@@ -108,16 +108,43 @@ void PLUnificationStackFree(PLUnificationStackFrame *f)
 
 void PLUnifierApplyToTerms(PLTerm **t, const PLUnifier *u)
 {
+	PLTerm *head = *t;
+	PLTerm *list = head;
+	while (list) {
+		if (!PLTermEqual(list, u->variable)) {
+			continue;
+		}
 
+		PLTerm *temp = PLTermCopy(u->term);
+		temp->next = list->next;
+		list->next = NULL;
+
+		if (list == head) {
+			head = temp;
+		}
+
+		PLTermFree(list);
+		list = temp;
+
+		list = list->next;
+	}
+	*t = head;
 }
 
 void PLUnifierApplyToStack(PLUnificationStackFrame *f, const PLUnifier *u)
 {
-
+	while (f) {
+		PLUnifierApplyToTerms(&(f->term1), u);
+		PLUnifierApplyToTerms(&(f->term2), u);
+		f = f->next;
+	}
 }
 
-void PLUnifierApplyToUnifier(PLUnifier *u, const PLUnifier *list)
+void PLUnifierApplyToUnifier(PLUnifier *list, const PLUnifier *u)
 {
-
+	while (list) {
+		PLUnifierApplyToTerms(list->term);
+		list = list->next;
+	}
 }
 
