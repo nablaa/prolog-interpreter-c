@@ -79,4 +79,8 @@ void test_plunify()
 	WITH_COLOR(GREEN, printf("test_plunify()\n"));
 	test_unification("unify_test_1.pl", "unify_test_1.pl", 1, "{}");
 	test_unification("unify_test_1.pl", "unify_test_2.pl", 1, "{Number = 1}");
+	test_unification("unify_test_3.pl", "unify_test_4.pl", 1, "{List = list(b, list(c, last))}");
+	test_unification("unify_test_5.pl", "unify_test_6.pl", 1, "{A = list(a, X), Y = list(b, C)}");
+	test_unification("unify_test_7.pl", "unify_test_8.pl", 0, "");
+	test_unification("unify_test_9.pl", "unify_test_10.pl", 0, "");
 }
