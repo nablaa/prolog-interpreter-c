@@ -112,6 +112,7 @@ void PLUnifierApplyToTerms(PLTerm **t, const PLUnifier *u)
 	PLTerm *list = head;
 	while (list) {
 		if (!PLTermIsVariable(list) || strcmp(list->datum.variable, u->variable)) {
+			list = list->next;
 			continue;
 		}
 
