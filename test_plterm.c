@@ -41,8 +41,8 @@ void test_term(const char *filename)
 
 	PLToken *token = PLTokenise(file, 0);
 	PLToken *remove = token;
-	const PLToken **t = &token;
-	PLTerm *term = PLParse(t);
+	const PLToken *t = token;
+	PLTerm *term = PLParse(&t);
 	WITH_COLOR(YELLOW, PLTermPrint(term, stdout));
 	printf("\n");
 

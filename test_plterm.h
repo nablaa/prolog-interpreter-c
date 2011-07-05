@@ -4,6 +4,7 @@
 #include "tests.h"
 #include "plterm.h"
 #include "pltoken.h"
+#include "plparse.h"
 
 void test_plterm();
 

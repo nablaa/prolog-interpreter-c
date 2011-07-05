@@ -12,11 +12,11 @@ void test_parse(const char *filename)
 
 	PLToken *token = PLTokenise(file, 0);
 	PLToken *remove = token;
-	const PLToken **t = &token;
+	const PLToken *t = token;
 	PLTerm *term;
 
-	while (*t) {
-		term = PLParse(t);
+	while (t) {
+		term = PLParse(&t);
 		WITH_COLOR(YELLOW, PLTermPrint(term, stdout));
 		PLTermFree(term);
 	}
