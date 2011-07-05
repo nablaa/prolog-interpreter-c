@@ -111,7 +111,7 @@ void PLUnifierApplyToTerms(PLTerm **t, const PLUnifier *u)
 	PLTerm *head = *t;
 	PLTerm *list = head;
 	while (list) {
-		if (!PLTermEqual(list, u->variable)) {
+		if (!PLTermIsVariable(list) || strcmp(list->datum.variable, u->variable)) {
 			continue;
 		}
 
@@ -143,7 +143,7 @@ void PLUnifierApplyToStack(PLUnificationStackFrame *f, const PLUnifier *u)
 void PLUnifierApplyToUnifier(PLUnifier *list, const PLUnifier *u)
 {
 	while (list) {
-		PLUnifierApplyToTerms(list->term);
+		PLUnifierApplyToTerms(&(list->term), u);
 		list = list->next;
 	}
 }
