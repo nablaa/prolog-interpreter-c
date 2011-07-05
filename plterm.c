@@ -152,6 +152,8 @@ PLTerm *PLTermCopy(const PLTerm *t)
 	if (PLTermIsCompound(t)) {
 		copy->datum.compoundTerm.arguments = PLTermsCopy(t->datum.compoundTerm.arguments);
 		copy->datum.compoundTerm.body = PLTermsCopy(t->datum.compoundTerm.body);
+		copy->datum.compoundTerm.name = (char *)malloc(strlen(t->datum.compoundTerm.name) + 1);
+		strcpy(copy->datum.compoundTerm.name, t->datum.compoundTerm.name);
 	} else {
 		copy->datum.variable = (char *)malloc(strlen(t->datum.variable) + 1);
 		strcpy(copy->datum.variable, t->datum.variable);
