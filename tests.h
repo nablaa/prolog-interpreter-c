@@ -14,4 +14,14 @@
 	statement;                   \
 	SET(RESET);
 
+#define TEST_BOOLEAN(expression, name)                           \
+	do {                                                     \
+		printf("%s ", name);                             \
+		if (expression) {                                \
+			WITH_COLOR(GREEN, printf("OK\n"));       \
+		} else {                                         \
+			WITH_COLOR(RED, printf("FAIL\n"));       \
+		}                                                \
+	} while (0);                                             \
+
 #endif /* TESTS_H */

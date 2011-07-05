@@ -3,6 +3,7 @@
 
 #include "tests.h"
 #include "plterm.h"
+#include "pltoken.h"
 
 void test_plterm();
 
