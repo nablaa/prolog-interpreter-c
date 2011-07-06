@@ -65,7 +65,9 @@ PLTerm *PLParseTerm(const PLToken **tokens)
 PLTerm *PLParse(const PLToken **tokens)
 {
 	assert(tokens);
-	assert(*tokens);
+	if (!*tokens) {
+		return NULL;
+	}
 
 	PLTerm *head = PLParseTerm(tokens);
 	PLTokenType type = (*tokens)->type;

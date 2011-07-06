@@ -22,14 +22,14 @@ PLTerm *PLConsult(FILE *file, int stopToFirstPeriod)
 	PLTerm *list = NULL;
 	PLTerm *term = NULL;
 
-	do {
+	while (1) {
 		term = PLParse(&t);
 		if (!term) {
 			break;
 		}
 		term->next = list;
 		list = term;
-	} while (stopToFirstPeriod);
+	};
 
 	PLTokensFree(tokens);
 	return list;
