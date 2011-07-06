@@ -85,7 +85,7 @@ PLTerm *PLInterpret(PLStackFrame **stack, const PLTerm *database)
 				PLUnifier *u;
 				int unifies = PLUnify(f->goal, compare, &u);
 
-				if (unifies) {
+				if (!unifies) {
 					if (f->position->next) {
 						PLStackFrame *frame = PLStackFrameCreate(f->goal, f->goal, f->position);
 						frame->next = *stack;
