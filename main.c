@@ -5,6 +5,7 @@
 #include "test_plterm.h"
 #include "test_plparse.h"
 #include "test_plunify.h"
+#include "test_plinterpreter.h"
 
 int main()
 {
@@ -14,6 +15,7 @@ int main()
 	test_plterm();
 	test_plparse();
 	test_plunify();
+	test_plinterpreter();
 
 	WITH_COLOR(GREEN, printf("Tests end\n"));
 	return EXIT_SUCCESS;
