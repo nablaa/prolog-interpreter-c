@@ -76,7 +76,7 @@ PLTerm *PLInterpret(PLStackFrame **stack, const PLTerm *database)
 			f->resolvent = f->resolvent->next;
 			f->goal->next = NULL;
 
-			while (f->position) {
+			while (f->position->next) {
 				PLTerm *compare = PLTermCopy(f->position);
 				PLTermRenameVariables(compare);
 				f->position = f->position->next;
@@ -86,7 +86,7 @@ PLTerm *PLInterpret(PLStackFrame **stack, const PLTerm *database)
 				int unifies = PLUnify(f->goal, compare, &u);
 
 				if (unifies) {
-					if (f->position) {
+					if (f->position->next) {
 						PLStackFrame *frame = PLStackFrameCreate(f->goal, f->goal, f->position);
 						frame->next = *stack;
 						*stack = frame;
