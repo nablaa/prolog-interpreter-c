@@ -74,6 +74,32 @@ void test_unification(const char *filename1, const char *filename2, int should_u
 	PLTermFree(t2);
 }
 
+void test_termapply(const char *t_filename, const char *u_filename, char *variable, const char *result)
+{
+	WITH_COLOR(BLUE, printf("test_termapply\n"));
+	PLTerm *t = load_term(t_filename);
+	PLTerm *u = load_term(u_filename);
+
+	printf("t:\t");
+	WITH_COLOR(YELLOW, PLTermPrint(t, stdout));
+	printf("u:\t");
+	WITH_COLOR(YELLOW, PLTermPrint(u, stdout));
+	printf("\n");
+
+	PLUnifier *unifier = PLUnifierCreate(u, variable);
+	PLUnifierApplyToTerms(&t, unifier);
+	PLUnifierFree(unifier);
+
+	printf("t2:\t");
+	WITH_COLOR(YELLOW, PLTermPrint(t, stdout));
+
+	printf("Should be:\n\t");
+	WITH_COLOR(YELLOW, printf("%s\n", result));
+
+	PLTermFree(t);
+	PLTermFree(u);
+}
+
 void test_plunify()
 {
 	WITH_COLOR(GREEN, printf("test_plunify()\n"));
@@ -83,4 +109,6 @@ void test_plunify()
 	test_unification("unify_test_5.pl", "unify_test_6.pl", 1, "{A = list(a, X), Y = list(b, C)}");
 	test_unification("unify_test_7.pl", "unify_test_8.pl", 0, "");
 	test_unification("unify_test_9.pl", "unify_test_10.pl", 0, "");
+
+	test_termapply("apply_1_t.pl", "apply_1_u.pl", "N", "sum(s(done),hello(done,M)):-sum(M,hello(done,done))");
 }
