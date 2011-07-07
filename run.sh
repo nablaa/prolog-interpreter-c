@@ -12,4 +12,4 @@ else
 fi
 
 
-colorgcc -Wall -Wextra -pedantic -g -std=c99 -o main *.c && $cmd
+colorgcc -Wall -Wextra -Wshadow -pedantic -g -std=c99 -o main *.c && $cmd

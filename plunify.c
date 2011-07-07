@@ -11,7 +11,7 @@ int Identical(const PLTerm *t1, const PLTerm *t2)
 	return 0;
 }
 
-int PLUnify(const PLTerm *t1, const PLTerm *t2, PLUnifier **u)
+int PLUnify(const PLTerm *t1, const PLTerm *t2, PLUnifier **unifier)
 {
 	PLUnifier *mgu = PLUnifierCreate(NULL, "");
 	PLUnificationStackFrame *stack = PLUnificationStackFrameCreate(t1, t2);
@@ -52,7 +52,7 @@ int PLUnify(const PLTerm *t1, const PLTerm *t2, PLUnifier **u)
 		} else {
 			PLUnificationStackFree(xy);
 			PLUnificationStackFree(stack);
-			*u = NULL;
+			*unifier = NULL;
 			return 1;
 		}
 
@@ -60,7 +60,7 @@ int PLUnify(const PLTerm *t1, const PLTerm *t2, PLUnifier **u)
 	}
 
 	PLUnificationStackFree(stack);
-	*u = mgu;
+	*unifier = mgu;
 	return 0;
 }
 

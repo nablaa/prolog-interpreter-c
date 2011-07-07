@@ -10,10 +10,10 @@ PLTerm *load_term(const char *filename)
 	}
 
 	PLToken *token = PLTokenise(file, 0);
-	PLToken *remove = token;
+	PLToken *rem = token;
 	const PLToken *t = token;
 	PLTerm *term = PLParse(&t);
-	PLTokensFree(remove);
+	PLTokensFree(rem);
 	fclose(file);
 	return term;
 }
