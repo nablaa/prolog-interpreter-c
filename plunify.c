@@ -108,28 +108,37 @@ void PLUnificationStackFree(PLUnificationStackFrame *f)
 
 void PLUnifierApplyToTerms(PLTerm **t, const PLUnifier *u)
 {
-	PLTerm *head = *t;
-	PLTerm *list = head;
-	while (list) {
-		if (!PLTermIsVariable(list) || strcmp(list->datum.variable, u->variable)) {
-			list = list->next;
-			continue;
-		}
-
-		PLTerm *temp = PLTermCopy(u->term);
-		temp->next = list->next;
-		list->next = NULL;
-
-		if (list == head) {
-			head = temp;
-		}
-
-		PLTermFree(list);
-		list = temp;
-
-		list = list->next;
+	if (!*t) {
+		return;
 	}
-	*t = head;
+
+	if (PLTermIsVariable(*t)) {
+		PLTerm *term = *t;
+		char *var = term->datum.variable;
+		if (!strcmp(var, u->variable)) {
+			PLTerm *head = PLTermCopy(u->term);
+			head->next = term->next;
+			term->next = NULL;
+			*t = head;
+			PLTermFree(term);
+		}
+	} else {
+		PLTerm *term = *t;
+		if (term->datum.compoundTerm.arguments) {
+			PLUnifierApplyToTerms(&term->datum.compoundTerm.arguments, u);
+		}
+		if (term->datum.compoundTerm.body) {
+			PLUnifierApplyToTerms(&term->datum.compoundTerm.body, u);
+		}
+	}
+
+	if ((*t)->next) {
+		PLUnifierApplyToTerms(&(*t)->next, u);
+	}
+
+	if (u->next) {
+		PLUnifierApplyToTerms(t, u->next);
+	}
 }
 
 void PLUnifierApplyToStack(PLUnificationStackFrame *f, const PLUnifier *u)
