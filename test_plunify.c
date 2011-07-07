@@ -109,6 +109,7 @@ void test_plunify()
 	test_unification("unify_test_5.pl", "unify_test_6.pl", 1, "{A = list(a, X), Y = list(b, C)}");
 	test_unification("unify_test_7.pl", "unify_test_8.pl", 0, "");
 	test_unification("unify_test_9.pl", "unify_test_10.pl", 0, "");
+	test_unification("unify_test_11.pl", "unify_test_12.pl", 0, "");
 
 	test_termapply("apply_1_t.pl", "apply_1_u.pl", "N", "sum(s(done),hello(done,M)):-sum(M,hello(done,done))");
 }
