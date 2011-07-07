@@ -72,7 +72,7 @@ PLTerm *PLInterpret(PLStackFrame **stack, PLTerm *database)
 		while (f->resolvent) {
 			PLTerm *goal = f->resolvent;
 			f->resolvent = f->resolvent->next;
-			f->goal->next = NULL;
+			goal->next = NULL;
 
 			while (f->position) {
 
