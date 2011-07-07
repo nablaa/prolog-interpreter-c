@@ -70,22 +70,22 @@ PLTerm *PLInterpret(PLStackFrame **stack, PLTerm *database)
 		f->next = NULL;
 
 		while (f->resolvent) {
-			PLTermFree(f->goal);
-			f->goal = f->resolvent;
+			PLTerm *goal = f->resolvent;
 			f->resolvent = f->resolvent->next;
 			f->goal->next = NULL;
 
-			while (f->position->next) {
+			while (f->position) {
+
 				PLTerm *compare = PLTermCopy(f->position);
 				PLTermRenameVariables(compare);
 				f->position = f->position->next;
 				status = UNKNOWN;
 
 				PLUnifier *u;
-				int unifies = PLUnify(f->goal, compare, &u);
+				int unifies = !PLUnify(goal, compare, &u);
 
-				if (!unifies) {
-					if (f->position->next) {
+				if (unifies) {
+					if (f->position) {
 						PLStackFrame *frame = PLStackFrameCreate(f->goal, f->goal, f->position);
 						frame->next = *stack;
 						*stack = frame;
@@ -97,23 +97,30 @@ PLTerm *PLInterpret(PLStackFrame **stack, PLTerm *database)
 					PLUnifierApplyToTerms(&body, u);
 
 					while (body) {
-						addEnd(body, f->resolvent);
+						if (!f->resolvent) {
+							f->resolvent = PLTermCopy(body);
+						} else {
+							addEnd(body, f->resolvent);
+						}
 						body = body->next;
 					}
 
 					f->position = database;
 					status = SUCCESS;
+
+					PLTermFree(compare);
+					PLUnifierFree(u);
 					break;
 				}
 
-				PLUnifierFree(u);
 				PLTermFree(compare);
+				PLUnifierFree(u);
 			}
 
-			if (!f->position->next && status != SUCCESS) {
+			PLTermFree(goal);
+			if (!f->position && status != SUCCESS) {
 				break;
 			}
-
 		}
 
 		if (!f->resolvent && status == SUCCESS) {
@@ -140,8 +147,12 @@ PLTerm *PLConsult(FILE *file, int stopToFirstPeriod)
 		if (!term) {
 			break;
 		}
-		term->next = list;
-		list = term;
+
+		if (!list) {
+			list = term;
+		} else {
+			addEnd(term, list);
+		}
 	};
 
 	PLTokensFree(tokens);
