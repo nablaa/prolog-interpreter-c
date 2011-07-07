@@ -13,7 +13,7 @@ int Identical(const PLTerm *t1, const PLTerm *t2)
 
 int PLUnify(const PLTerm *t1, const PLTerm *t2, PLUnifier **u)
 {
-	PLUnifier *mgu = NULL;
+	PLUnifier *mgu = PLUnifierCreate(NULL, "");
 	PLUnificationStackFrame *stack = PLUnificationStackFrameCreate(t1, t2);
 
 	while (stack) {
@@ -67,8 +67,11 @@ int PLUnify(const PLTerm *t1, const PLTerm *t2, PLUnifier **u)
 PLUnifier *PLUnifierCreate(const PLTerm *t, const PLVariable v)
 {
 	PLUnifier *u = (PLUnifier *)malloc(sizeof(PLUnifier));
-	u->variable = (char *)malloc(strlen(v) + 1);
-	strcpy(u->variable, v);
+	u->variable = NULL;
+	if (v) {
+		u->variable = (char *)malloc(strlen(v) + 1);
+		strcpy(u->variable, v);
+	}
 	u->term = PLTermCopy(t);
 	u->next = NULL;
 	return u;
@@ -108,7 +111,7 @@ void PLUnificationStackFree(PLUnificationStackFrame *f)
 
 void PLUnifierApplyToTerms(PLTerm **t, const PLUnifier *u)
 {
-	if (!*t) {
+	if (!*t || !u->variable) {
 		return;
 	}
 
