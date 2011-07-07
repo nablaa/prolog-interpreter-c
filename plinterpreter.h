@@ -16,13 +16,13 @@ void PLHandleInput(FILE* database, FILE* query);
 
 /* Given a query calls PLInterpret() for it
  * Gives the user the possibility to have more solutions outputted. */
-void PLHandleQuery(const PLTerm* query, const PLTerm* database, FILE* input);
+void PLHandleQuery(const PLTerm* query, PLTerm* database, FILE* input);
 
 /* Interprets the given stack using the database
  * On success returns the solution term
  *            stack contains the stack
  * On failure returns NULL and the value of the stack is invalid */
-PLTerm* PLInterpret(PLStackFrame **stack, const PLTerm* database);
+PLTerm* PLInterpret(PLStackFrame **stack, PLTerm* database);
 
 /* Returns a list of terms that can be parsed from the file
  * stopToFirstPeriod is used in interactive mode and passed to tokeniser */

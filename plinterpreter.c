@@ -33,7 +33,7 @@ void PLHandleInput(FILE *database, FILE *query)
 	PLTermFree(q);
 }
 
-void PLHandleQuery(const PLTerm *query, const PLTerm *database, FILE *input)
+void PLHandleQuery(const PLTerm *query, PLTerm *database, FILE *input)
 {
 	PLTerm *solution;
 	PLStackFrame *stack = PLStackFrameCreate(query, query, database); // TODO ?
@@ -50,7 +50,6 @@ void PLHandleQuery(const PLTerm *query, const PLTerm *database, FILE *input)
 			} else if (ch == 'n') {
 				break;
 			} else {
-				assert(0);
 			}
 		} else {
 			printf("No. \n");
@@ -61,7 +60,7 @@ void PLHandleQuery(const PLTerm *query, const PLTerm *database, FILE *input)
 	PLStackFree(stack);
 }
 
-PLTerm *PLInterpret(PLStackFrame **stack, const PLTerm *database)
+PLTerm *PLInterpret(PLStackFrame **stack, PLTerm *database)
 {
 	int status = UNKNOWN;
 
