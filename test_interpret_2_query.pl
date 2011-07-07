@@ -1,0 +1,2 @@
+owner(Human, Animal).
+quit.

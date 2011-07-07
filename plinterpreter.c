@@ -22,6 +22,7 @@ void PLHandleInput(FILE *database, FILE *query)
 
 	while (1) {
 		q = PLConsult(query, 1);
+		assert(q);
 		if (PLTermIsConstant(q) && !strcmp(q->datum.compoundTerm.name, "quit")) {
 			break;
 		}

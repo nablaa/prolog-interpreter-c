@@ -48,7 +48,7 @@ void test_interpret(const char *database_filename, const char *query_filename,
 
 	if (resolves) {
 		WITH_COLOR(BLUE, printf("Should resolve with resolvent:\n"));
-		WITH_COLOR(YELLOW, printf("%s", solution));
+		WITH_COLOR(YELLOW, printf("%s\n", solution));
 	} else {
 		WITH_COLOR(BLUE, printf("Should not resolve\n"));
 	}
@@ -60,7 +60,8 @@ void test_interpret(const char *database_filename, const char *query_filename,
 void test_plinterpreter()
 {
 	WITH_COLOR(GREEN, printf("test_plinterpreter()\n"));
-	test_interpret("test_interpret_1_db.pl", "test_interpret_1_query.pl", 1, "add(s(0), s(0), s(s(0)))");
+	//test_interpret("test_interpret_1_db.pl", "test_interpret_1_query.pl", 1, "add(s(0), s(0), s(s(0)))");
+	test_interpret("test_interpret_2_db.pl", "test_interpret_2_query.pl", 1, "add(s(0), s(0), s(s(0)))");
 
 }
 
