@@ -52,6 +52,7 @@ int PLUnify(const PLTerm *t1, const PLTerm *t2, PLUnifier **unifier)
 		} else {
 			PLUnificationStackFree(xy);
 			PLUnificationStackFree(stack);
+			PLUnifierFree(mgu);
 			*unifier = NULL;
 			return 1;
 		}
