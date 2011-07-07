@@ -29,14 +29,12 @@ int PLUnify(const PLTerm *t1, const PLTerm *t2, PLUnifier **unifier)
 			PLUnifierApplyToStack(stack, u);
 			u->next = mgu;
 			mgu = u;
-			// TODO apply U only or MGU?
 		} else if (PLTermIsVariable(y) && !PLVariableOccurs(y->datum.variable, x)) {
 			PLUnifier *u = PLUnifierCreate(x, y->datum.variable);
 			PLUnifierApplyToUnifier(mgu, u);
 			PLUnifierApplyToStack(stack, u);
 			u->next = mgu;
 			mgu = u;
-			// TODO apply U only or MGU?
 		} else if (Identical(x, y)) {
 		} else if (PLTermCompatible(x, y)) {
 			const PLTerm *am = x->datum.compoundTerm.arguments;

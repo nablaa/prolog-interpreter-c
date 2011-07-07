@@ -76,7 +76,6 @@ PLTerm *PLInterpret(PLStackFrame **stack, PLTerm *database)
 			goal->next = NULL;
 
 			while (f->position) {
-
 				PLTerm *compare = PLTermCopy(f->position);
 				PLTermRenameVariables(compare);
 				f->position = f->position->next;
@@ -154,7 +153,7 @@ PLTerm *PLConsult(FILE *file, int stopToFirstPeriod)
 		} else {
 			addEnd(term, list);
 		}
-	};
+	}
 
 	PLTokensFree(tokens);
 	return list;
