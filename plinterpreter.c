@@ -47,10 +47,12 @@ void PLHandleQuery(const PLTerm *query, const PLTerm *database, FILE *input)
 			PLTermFree(solution);
 			printf("More solutions (y/n) ?\n");
 			int ch = fgetc(input);
+			fgetc(input);
 			if (ch == 'y') {
 			} else if (ch == 'n') {
 				break;
 			} else {
+				assert(0);
 			}
 		} else {
 			printf("No. \n");
