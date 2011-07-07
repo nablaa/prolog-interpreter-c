@@ -62,6 +62,7 @@ void test_plinterpreter()
 	WITH_COLOR(GREEN, printf("test_plinterpreter()\n"));
 	//test_interpret("test_interpret_1_db.pl", "test_interpret_1_query.pl", 1, "add(s(0), s(0), s(s(0)))");
 	test_interpret("test_interpret_2_db.pl", "test_interpret_2_query.pl", 1, "add(s(0), s(0), s(s(0)))");
+	test_interpret("test_interpret_3_db.pl", "test_interpret_3_query.pl", 1, "SEE FILE");
 
 }
 
