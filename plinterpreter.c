@@ -12,7 +12,7 @@ void addEnd(PLTerm *t, PLTerm *list)
 		list = list->next;
 	}
 
-	prev->next = PLTermCopy(t);
+	prev->next = t;
 }
 
 void PLHandleInput(FILE *database, FILE *query)
@@ -101,7 +101,7 @@ PLTerm *PLInterpret(PLStackFrame **stack, PLTerm *database)
 						if (!f->resolvent) {
 							f->resolvent = PLTermCopy(body);
 						} else {
-							addEnd(body, f->resolvent);
+							addEnd(PLTermCopy(body), f->resolvent);
 						}
 						body = body->next;
 					}
