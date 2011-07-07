@@ -34,10 +34,10 @@ void PLHandleInput(FILE *database, FILE *query)
 	PLTermFree(q);
 }
 
-void PLHandleQuery(const PLTerm *query, PLTerm *database, FILE *input)
+void PLHandleQuery(const PLTerm *query, const PLTerm *database, FILE *input)
 {
 	PLTerm *solution;
-	PLStackFrame *stack = PLStackFrameCreate(query, query, database); // TODO ?
+	PLStackFrame *stack = PLStackFrameCreate(query, query, (PLTerm *)database);
 
 	while (1) {
 		solution = PLInterpret(&stack, database);
@@ -61,7 +61,7 @@ void PLHandleQuery(const PLTerm *query, PLTerm *database, FILE *input)
 	PLStackFree(stack);
 }
 
-PLTerm *PLInterpret(PLStackFrame **stack, PLTerm *database)
+PLTerm *PLInterpret(PLStackFrame **stack, const PLTerm *database)
 {
 	int status = UNKNOWN;
 
@@ -105,7 +105,7 @@ PLTerm *PLInterpret(PLStackFrame **stack, PLTerm *database)
 						body = body->next;
 					}
 
-					f->position = database;
+					f->position = (PLTerm *)database;
 					status = SUCCESS;
 
 					PLTermFree(compare);
