@@ -38,10 +38,10 @@ void test_interpret(const char *database_filename, const char *query_filename,
 	FILE *db_file = open_file(database_filename);
 	FILE *query_file = open_file(query_filename);
 
-	printf("Database:\n");
+	printf("Database file:\n");
 	print_file(database_filename);
 
-	printf("Query:\n");
+	printf("Query file:\n");
 	print_file(query_filename);
 
 	PLHandleInput(db_file, query_file);
