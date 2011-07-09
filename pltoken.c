@@ -55,7 +55,7 @@ PLToken *PLTokenise(FILE *file, int stopToFirstPeriod)
 				ch = fgetc(file);
 			} while (isalpha(ch) || isdigit(ch));
 			buf[i] = '\0';
-			fseek(file, -1, SEEK_CUR);
+			ungetc(ch, file);
 			t = PLTokenCreate(type, buf);
 		}
 
