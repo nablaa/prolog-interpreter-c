@@ -30,7 +30,7 @@ void PLHandleInput(FILE *database, FILE *query)
 		if (PLTermIsConstant(q) && !strcmp(q->datum.compoundTerm.name, "quit")) {
 			break;
 		}
-		PLHandleQuery(q, db, stdin);
+		PLHandleQuery(q, db, query);
 		PLTermFree(q);
 	}
 
