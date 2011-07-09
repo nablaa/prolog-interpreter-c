@@ -15,6 +15,20 @@ void addEnd(PLTerm *t, PLTerm *list)
 	prev->next = t;
 }
 
+PLTerm *append(PLTerm *l1, PLTerm *l2)
+{
+	if (!l1) {
+		return PLTermsCopy(l2);
+	}
+
+	PLTerm *rval = l1;
+	PLTerm *prev = l1;
+	for (; l1; prev = l1, l1 = l1->next);
+
+	prev->next = PLTermsCopy(l2);
+	return rval;
+}
+
 void PLHandleInput(FILE *database, FILE *query)
 {
 	PLTerm *db = PLConsult(database, 0);
@@ -97,16 +111,7 @@ PLTerm *PLInterpret(PLStackFrame **stack, const PLTerm *database)
 					PLUnifierApplyToTerms(&f->resolvent, u);
 					PLUnifierApplyToTerms(&f->goal, u);
 					PLUnifierApplyToTerms(&body, u);
-
-					while (body) {
-						if (!f->resolvent) {
-							f->resolvent = PLTermCopy(body);
-						} else {
-							addEnd(PLTermCopy(body), f->resolvent);
-						}
-						body = body->next;
-					}
-
+					f->resolvent = append(f->resolvent, body);
 					f->position = (PLTerm *)database;
 					status = SUCCESS;
 
