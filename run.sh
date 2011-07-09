@@ -11,5 +11,4 @@ else
 	cmd="./main"
 fi
 
-
-colorgcc -Wall -Wextra -Wshadow -pedantic -g -std=c99 -o main *.c && $cmd
+colorgcc -Wall -Wextra -Wshadow -pedantic -g -std=c99 -o main pl*.c test_*.c main.c && $cmd
