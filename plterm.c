@@ -1,7 +1,7 @@
 #include <assert.h>
 #include "plterm.h"
 
-#define EXTRA_SIZE 8
+#define EXTRA_SIZE 16
 
 int PLTermIsCompound(const PLTerm *t)
 {
@@ -18,20 +18,14 @@ int PLTermIsVariable(const PLTerm *t)
 int PLTermIsConstant(const PLTerm *t)
 {
 	assert(t);
-	return (PLTermIsCompound(t) && PLTermArity(t) == 0 && t->datum.compoundTerm.body == NULL);
+	return (PLTermIsCompound(t) && !PLTermArity(t) && !t->datum.compoundTerm.body);
 }
 
 int PLTermArity(const PLTerm *t)
 {
 	assert(t);
 	int n = 0;
-	t = t->datum.compoundTerm.arguments;
-
-	while (t) {
-		t = t->next;
-		++n;
-	}
-
+	for (t = t->datum.compoundTerm.arguments; t; t = t->next, ++n);
 	return n;
 }
 
@@ -43,20 +37,16 @@ int PLVariableOccurs(PLVariable v, const PLTerm *t)
 		return !strcmp(t->datum.variable, v);
 	}
 
-	PLTerm *arg = t->datum.compoundTerm.arguments;
-	while (arg) {
+	for (PLTerm *arg = t->datum.compoundTerm.arguments; arg; arg = arg->next) {
 		if (PLVariableOccurs(v, arg)) {
 			return 1;
 		}
-		arg = arg->next;
 	}
 
-	PLTerm *body = t->datum.compoundTerm.body;
-	while (body) {
+	for (PLTerm *body = t->datum.compoundTerm.body; body; body = body->next) {
 		if (PLVariableOccurs(v, body)) {
 			return 1;
 		}
-		body = body->next;
 	}
 
 	return 0;
@@ -99,7 +89,6 @@ int PLTermEqual(const PLTerm *t1, const PLTerm *t2)
 		arg2 = arg2->next;
 	}
 
-	// TODO check
 	PLTerm *body1 = t1->datum.compoundTerm.body;
 	PLTerm *body2 = t2->datum.compoundTerm.body;
 	while (body1) {
@@ -108,8 +97,7 @@ int PLTermEqual(const PLTerm *t1, const PLTerm *t2)
 		}
 		body1 = body1->next;
 		body2 = body2->next;
-		if ((body1 == NULL && body2 != NULL)
-		     || (body1 != NULL && body2 == NULL)) {
+		if ((!body1 && body2) || (body1 && !body2)) {
 			return 0;
 		}
 	}
@@ -191,11 +179,10 @@ void PLTermPrint_(const PLTerm *t, FILE *file)
 	if (PLTermArity(t) > 0) {
 		fprintf(file, "(");
 		PLTermPrint_(t->datum.compoundTerm.arguments, file);
-		PLTerm *p = t->datum.compoundTerm.arguments->next;
-		while (p) {
+
+		for (PLTerm *p = t->datum.compoundTerm.arguments->next; p; p = p->next) {
 			fprintf(file, ",");
 			PLTermPrint_(p, file);
-			p = p->next;
 		}
 		fprintf(file, ")");
 	}
@@ -203,14 +190,12 @@ void PLTermPrint_(const PLTerm *t, FILE *file)
 	if (t->datum.compoundTerm.body) {
 		fprintf(file, ":-");
 		PLTermPrint_(t->datum.compoundTerm.body, file);
-		PLTerm *p = t->datum.compoundTerm.body->next;
-		while (p) {
+
+		for (PLTerm *p = t->datum.compoundTerm.body->next; p; p = p->next) {
 			fprintf(file, ",");
 			PLTermPrint_(p, file);
-			p = p->next;
 		}
 	}
-
 }
 
 void PLTermPrint(const PLTerm *t, FILE *file)
@@ -237,7 +222,7 @@ void PLTermFree(PLTerm *t)
 	free(t);
 }
 
-void PLTermRenameVariablesIndex(PLTerm *t, int index, int rename_list)
+void PLTermRenameVariablesIndex(PLTerm *t, int index, int renameList)
 {
 	if (!t) {
 		return;
@@ -253,7 +238,7 @@ void PLTermRenameVariablesIndex(PLTerm *t, int index, int rename_list)
 		t->datum.variable = strcat(t->datum.variable, buf);
 	}
 
-	if (rename_list) {
+	if (renameList) {
 		PLTermRenameVariablesIndex(t->next, index, 1);
 	}
 }
@@ -262,7 +247,6 @@ void PLTermRenameVariables(PLTerm *t)
 {
 	assert(t);
 	static int index = 0;
-	PLTermRenameVariablesIndex(t, index, 0);
-	++index;
+	PLTermRenameVariablesIndex(t, index++, 0);
 }
 

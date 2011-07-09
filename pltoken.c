@@ -5,10 +5,7 @@
 
 PLToken *PLTokenise(FILE *file, int stopToFirstPeriod)
 {
-	if (!file) {
-		return NULL;
-	}
-
+	assert(file);
 	int stop = 0;
 	int ch;
 	PLToken *tokens = NULL;
@@ -18,10 +15,6 @@ PLToken *PLTokenise(FILE *file, int stopToFirstPeriod)
 	while ((ch = fgetc(file)) != EOF) {
 		while (isspace(ch)) {
 			ch = fgetc(file);
-		}
-
-		if (ch == EOF) {
-			break;
 		}
 
 		if (ch == '(') {
@@ -42,6 +35,8 @@ PLToken *PLTokenise(FILE *file, int stopToFirstPeriod)
 		} else if (ch == '%') {
 			while ((ch = fgetc(file)) != '\n');
 			continue;
+		} else if (ch == EOF) {
+			break;
 		} else {
 			if (!isalpha(ch) && !isdigit(ch)) {
 				PLTokensFree(tokens);
