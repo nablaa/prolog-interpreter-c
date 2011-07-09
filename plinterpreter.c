@@ -24,6 +24,7 @@ void PLHandleInput(FILE *database, FILE *query)
 	PLTerm *q;
 
 	while (1) {
+		printf("Query:\n");
 		q = PLConsult(query, 1);
 		assert(q);
 		if (PLTermIsConstant(q) && !strcmp(q->datum.compoundTerm.name, "quit")) {
@@ -49,8 +50,12 @@ void PLHandleQuery(const PLTerm *query, const PLTerm *database, FILE *input)
 			PLTermPrint(solution, stdout);
 			PLTermFree(solution);
 			printf("More solutions (y/n) ?\n");
+
 			int ch = fgetc(input);
-			fgetc(input);
+			while (isspace(ch)) {
+				ch = fgetc(input);
+			}
+
 			if (ch == 'y') {
 			} else if (ch == 'n') {
 				break;
