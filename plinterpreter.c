@@ -1,3 +1,4 @@
+#include <assert.h>
 #include "plinterpreter.h"
 
 #define UNKNOWN 0

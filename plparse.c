@@ -1,3 +1,4 @@
+#include <assert.h>
 #include "plparse.h"
 
 PLTerm *PLParseTerm(const PLToken **tokens);

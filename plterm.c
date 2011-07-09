@@ -1,3 +1,4 @@
+#include <assert.h>
 #include "plterm.h"
 
 #define EXTRA_SIZE 8

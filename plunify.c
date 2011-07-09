@@ -1,3 +1,4 @@
+#include <assert.h>
 #include "plunify.h"
 
 int Identical(const PLTerm *t1, const PLTerm *t2)

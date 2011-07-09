@@ -1,3 +1,4 @@
+#include <assert.h>
 #include "pltoken.h"
 
 #define MAX_LEN 128
