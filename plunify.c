@@ -24,18 +24,17 @@ int PLUnify(const PLTerm *t1, const PLTerm *t2, PLUnifier **unifier)
 		PLTerm *x = xy->term1;
 		PLTerm *y = xy->term2;
 
+		#define UNIFY(X, Y)                                           \
+			PLUnifier *u = PLUnifierCreate(X, Y->datum.variable); \
+			PLUnifierApplyToUnifier(mgu, u);                      \
+			PLUnifierApplyToStack(stack, u);                      \
+			u->next = mgu;                                        \
+			mgu = u;
+
 		if (PLTermIsVariable(x) && !PLVariableOccurs(x->datum.variable, y)) {
-			PLUnifier *u = PLUnifierCreate(y, x->datum.variable);
-			PLUnifierApplyToUnifier(mgu, u);
-			PLUnifierApplyToStack(stack, u);
-			u->next = mgu;
-			mgu = u;
+			UNIFY(y, x);
 		} else if (PLTermIsVariable(y) && !PLVariableOccurs(y->datum.variable, x)) {
-			PLUnifier *u = PLUnifierCreate(x, y->datum.variable);
-			PLUnifierApplyToUnifier(mgu, u);
-			PLUnifierApplyToStack(stack, u);
-			u->next = mgu;
-			mgu = u;
+			UNIFY(x, y);
 		} else if (Identical(x, y)) {
 		} else if (PLTermCompatible(x, y)) {
 			const PLTerm *am = x->datum.compoundTerm.arguments;
@@ -56,6 +55,7 @@ int PLUnify(const PLTerm *t1, const PLTerm *t2, PLUnifier **unifier)
 			return 1;
 		}
 
+		#undef UNIFY
 		PLUnificationStackFree(xy);
 	}
 

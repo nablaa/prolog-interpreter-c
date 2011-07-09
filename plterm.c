@@ -42,7 +42,6 @@ int PLVariableOccurs(PLVariable v, const PLTerm *t)
 			return 1;
 		}
 	}
-
 	for (PLTerm *body = t->datum.compoundTerm.body; body; body = body->next) {
 		if (PLVariableOccurs(v, body)) {
 			return 1;
