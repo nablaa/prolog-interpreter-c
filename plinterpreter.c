@@ -3,30 +3,17 @@
 #define UNKNOWN 0
 #define SUCCESS 1
 
-void addEnd(PLTerm *t, PLTerm **l)
-{
-	if (!*l) {
-		*l = t;
-		return;
-	}
-
-	PLTerm *list = *l;
-	PLTerm *prev = list;
-	for (; list; prev = list, list = list->next);
-	prev->next = t;
-}
-
 PLTerm *append(PLTerm *l1, PLTerm *l2)
 {
 	if (!l1) {
-		return PLTermsCopy(l2);
+		return l2;
 	}
 
 	PLTerm *rval = l1;
 	PLTerm *prev = l1;
 	for (; l1; prev = l1, l1 = l1->next);
 
-	prev->next = PLTermsCopy(l2);
+	prev->next = l2;
 	return rval;
 }
 
@@ -112,7 +99,7 @@ PLTerm *PLInterpret(PLStackFrame **stack, const PLTerm *database)
 					PLUnifierApplyToTerms(&f->resolvent, u);
 					PLUnifierApplyToTerms(&f->goal, u);
 					PLUnifierApplyToTerms(&body, u);
-					f->resolvent = append(f->resolvent, body);
+					f->resolvent = append(f->resolvent, PLTermsCopy(body));
 					f->position = (PLTerm *)database;
 					status = SUCCESS;
 
@@ -156,7 +143,7 @@ PLTerm *PLConsult(FILE *file, int stopToFirstPeriod)
 			break;
 		}
 
-		addEnd(term, &list);
+		list = append(list, term);
 	}
 
 	PLTokensFree(tokens);
