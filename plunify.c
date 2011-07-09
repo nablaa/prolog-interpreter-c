@@ -111,7 +111,7 @@ void PLUnificationStackFree(PLUnificationStackFrame *f)
 
 void PLUnifierApplyToTerms(PLTerm **t, const PLUnifier *u)
 {
-	if (!*t || !u->variable) {
+	if (!*t) {
 		return;
 	}
 
