@@ -83,7 +83,6 @@ PLTerm *PLInterpret(PLStackFrame **stack, const PLTerm *database)
 		while (f->resolvent) {
 			PLTerm *goal = f->resolvent;
 			f->resolvent = f->resolvent->next;
-			goal->next = NULL;
 
 			while (f->position) {
 				PLTerm *compare = PLTermCopy(f->position);
@@ -123,6 +122,7 @@ PLTerm *PLInterpret(PLStackFrame **stack, const PLTerm *database)
 				PLUnifierFree(u);
 			}
 
+			goal->next = NULL;
 			PLTermFree(goal);
 			if (!f->position && status != SUCCESS) {
 				break;
