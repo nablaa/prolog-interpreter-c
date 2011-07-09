@@ -105,11 +105,7 @@ PLTerm *PLInterpret(PLStackFrame **stack, const PLTerm *database)
 					PLUnifierApplyToTerms(&f->goal, u);
 					PLUnifierApplyToTerms(&body, u);
 
-					while (body) {
-						f->resolvent = append(f->resolvent, PLTermCopy(body));
-						body = body->next;
-					}
-
+					f->resolvent = append(PLTermsCopy(body), f->resolvent);
 					f->position = (PLTerm *)database;
 					status = SUCCESS;
 
