@@ -77,6 +77,8 @@ PLTerm *PLParse(const PLToken **tokens)
 	} else if (type == PLTokenArrow) {
 		assert(PLTermIsCompound(head));
 		head->datum.compoundTerm.body = PLParseBody(tokens);
+	} else if (type == PLTokenComma) {
+		head->next = PLParse(tokens);
 	} else {
 		assert(0);
 	}
