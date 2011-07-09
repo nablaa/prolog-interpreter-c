@@ -3,15 +3,16 @@
 #define UNKNOWN 0
 #define SUCCESS 1
 
-void addEnd(PLTerm *t, PLTerm *list)
+void addEnd(PLTerm *t, PLTerm **l)
 {
-	assert(list);
-	PLTerm *prev = list;
-	while (list) {
-		prev = list;
-		list = list->next;
+	if (!*l) {
+		*l = t;
+		return;
 	}
 
+	PLTerm *list = *l;
+	PLTerm *prev = list;
+	for (; list; prev = list, list = list->next);
 	prev->next = t;
 }
 
@@ -155,11 +156,7 @@ PLTerm *PLConsult(FILE *file, int stopToFirstPeriod)
 			break;
 		}
 
-		if (!list) {
-			list = term;
-		} else {
-			addEnd(term, list);
-		}
+		addEnd(term, &list);
 	}
 
 	PLTokensFree(tokens);
